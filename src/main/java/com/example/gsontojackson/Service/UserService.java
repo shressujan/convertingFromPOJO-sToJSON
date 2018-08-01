@@ -24,7 +24,7 @@ public class UserService {
     user.setEmail(userDAO.getEmail());
     user.setPassword(userDAO.getPassword());
     userRepository.save(user);
-    logger.info("Created User " + user);
+    logger.info("Created " + user);
     return user;
   }
 

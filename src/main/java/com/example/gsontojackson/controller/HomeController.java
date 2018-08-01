@@ -1,10 +1,13 @@
 package com.example.gsontojackson.controller;
 
 import com.example.gsontojackson.DAO.UserDAO;
+import com.example.gsontojackson.Domain.DefaultUser;
 import com.example.gsontojackson.Domain.User;
 import com.example.gsontojackson.Service.UserService;
-import com.example.gsontojackson.Service.convertToJSonUsingJackson.ConvertToJSonUsingJackson;
+import com.example.gsontojackson.Service.convertToJSonUsingJackson.ConvertJSONStringToPOJOS;
+import com.example.gsontojackson.Service.convertToJSonUsingJackson.ConvertPOJOSTOJSonString;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -20,7 +23,7 @@ public class HomeController {
 
   public HomeController(UserService userService) {
     this.userService = Objects.requireNonNull(userService);
-    logger = Logger.getLogger( HomeController.class.getName() );
+    logger = Logger.getLogger(this.getClass().getName() );
   }
 
   @GetMapping("/index")
@@ -32,18 +35,22 @@ public class HomeController {
   @PostMapping("/index")
   public String writeIndex(UserDAO userDAO) {
     User user = this.userService.createUser(userDAO);
-    logger.info("inside writeIndex()");
-    logger.info(user.toString());
     return "redirect:/JSon/" + user.getEmail();
   }
 
   @GetMapping("/JSon/{userEmail}")
+  public String getJSonObject(@PathVariable(value = "userEmail", required = true) String userEmail, Model model) {
+    logger.info("inside getJSonObject() method");
+    User user = this.userService.getUser(userEmail).orElseGet(() -> DefaultUser.getDefaultUser());
+    String jsonResponse = ConvertPOJOSTOJSonString.doConversion(user);
+    model.addAttribute("JSONString", jsonResponse);
+    return "jsonString";
+  }
+
+  @PostMapping("/POJOS")
   @ResponseBody
-  public String getJSonObject(@PathVariable(value = "userEmail", required = true) String userEmail) {
-    logger.info("inside getJSonObject() before conversion");
-    Optional<User> user = this.userService.getUser(userEmail);
-    String jsonResponse = ConvertToJSonUsingJackson.doConversion(user.get());
-    logger.info("inside getJSonObject()");
-    return jsonResponse;
+  public String getPOJOS(@RequestParam String jSONString) {
+    logger.info("inside getPOJOS() method");
+    return ConvertJSONStringToPOJOS.doConversion(jSONString).toString();
   }
 }
