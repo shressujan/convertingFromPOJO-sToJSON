@@ -10,7 +10,7 @@
     <div class="container">
       <div class="form-group">
         <label for="jSONString">JSONString</label>
-        <input type="text" name="jSONString" class="form-control" id="jSONString" value=${JSONString}>
+        <input type="text" name="jsonString" class="form-control" id="jSONString" value=${JSONString}>
       </div>
       <button type="submit" class="btn btn-primary">Get POJOs</button>
     </div>

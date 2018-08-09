@@ -1,17 +1,13 @@
 package com.example.gsontojackson.controller;
 
 import com.example.gsontojackson.DAO.UserDAO;
-import com.example.gsontojackson.Domain.DefaultUser;
 import com.example.gsontojackson.Domain.User;
 import com.example.gsontojackson.Service.UserService;
-import com.example.gsontojackson.Service.convertToJSonUsingJackson.ConvertJSONStringToPOJOS;
-import com.example.gsontojackson.Service.convertToJSonUsingJackson.ConvertPOJOSTOJSonString;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Controller
@@ -23,7 +19,7 @@ public class HomeController {
 
   public HomeController(UserService userService) {
     this.userService = Objects.requireNonNull(userService);
-    logger = Logger.getLogger(this.getClass().getName() );
+    logger = Logger.getLogger(this.getClass().getName());
   }
 
   @GetMapping("/index")
@@ -41,16 +37,15 @@ public class HomeController {
   @GetMapping("/JSon/{userEmail}")
   public String getJSonObject(@PathVariable(value = "userEmail", required = true) String userEmail, Model model) {
     logger.info("inside getJSonObject() method");
-    User user = this.userService.getUser(userEmail).orElseGet(() -> DefaultUser.getDefaultUser());
-    String jsonResponse = ConvertPOJOSTOJSonString.doConversion(user);
+    String jsonResponse = this.userService.convertPOJOsToJsonString(userEmail);
     model.addAttribute("JSONString", jsonResponse);
     return "jsonString";
   }
 
   @PostMapping("/POJOS")
   @ResponseBody
-  public String getPOJOS(@RequestParam String jSONString) {
+  public String getPOJOS(@RequestParam String jsonString) {
     logger.info("inside getPOJOS() method");
-    return ConvertJSONStringToPOJOS.doConversion(jSONString).toString();
+    return this.userService.convertJsonStringToPOJOS(jsonString);
   }
 }

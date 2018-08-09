@@ -6,7 +6,7 @@
   <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
 </head>
 <body id="home">
-<form method="post">
+<form method="post" action="/index">
   <div class="container">
     <div class="form-group">
       <label for="exampleInputEmail1">Email address</label>
