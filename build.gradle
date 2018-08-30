@@ -31,4 +31,5 @@ dependencies {
             ,'javax.servlet:jstl')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.0.3.RELEASE'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.0'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.6.Final'
 }

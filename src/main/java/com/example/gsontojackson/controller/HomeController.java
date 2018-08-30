@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ public class HomeController {
   }
 
   @PostMapping("/index")
-  public String writeIndex(UserDAO userDAO) {
+  public String writeIndex(@Valid UserDAO userDAO) {
     User user = this.userService.createUser(userDAO);
     return "redirect:/JSon/" + user.getEmail();
   }

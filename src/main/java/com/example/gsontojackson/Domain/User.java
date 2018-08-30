@@ -2,13 +2,11 @@ package com.example.gsontojackson.Domain;
 
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 public class User {
 
   @NotNull
-  @Email
   @Id
   public String email;
 

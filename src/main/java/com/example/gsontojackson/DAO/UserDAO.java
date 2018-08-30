@@ -1,14 +1,16 @@
 package com.example.gsontojackson.DAO;
 
+import com.example.gsontojackson.validation.ValidUser;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+@ValidUser
 public class UserDAO {
 
   @NotNull
-  @Email
   @Id
   public String email;
 
