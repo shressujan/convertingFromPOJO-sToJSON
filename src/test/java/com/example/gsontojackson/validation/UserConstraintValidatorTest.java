@@ -7,11 +7,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import javax.validation.*;
+import javax.validation.ClockProvider;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.Validator;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -30,8 +30,9 @@ public class UserConstraintValidatorTest {
     initMocks(this);
     userConstraintValidator = spy(new UserConstraintValidator(userRepository));
 
-    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-    validator = validatorFactory.getValidator();
+    /*Different validator*/
+/*    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    validator = validatorFactory.getValidator();*/
   }
 
   @Test
@@ -40,8 +41,10 @@ public class UserConstraintValidatorTest {
     userDAO.setEmail("hari_abc@yahoo.com");
     userDAO.setPassword("ABCqwe!@#1123");
 
-    Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
-    Assert.assertEquals(0, violations.size());
+    Assert.assertTrue(userConstraintValidator.isValid(userDAO, constraintValidatorContext()));
+
+   /* Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
+    Assert.assertEquals(0, violations.size());*/
   }
 
   @Test
@@ -50,8 +53,9 @@ public class UserConstraintValidatorTest {
     userDAO.setEmail("snoop_abc");
     userDAO.setPassword("ABCqwe!@#1123");
 
-    Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
-    Assert.assertEquals(1, violations.size());
+    Assert.assertFalse(userConstraintValidator.isValid(userDAO, constraintValidatorContext()));
+/*    Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
+    Assert.assertEquals(1, violations.size());*/
   }
 
   @Test
@@ -60,8 +64,9 @@ public class UserConstraintValidatorTest {
     userDAO.setEmail("snoop_abc@yahoo.com");
     userDAO.setPassword("!@#1123");
 
-    Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
-    Assert.assertEquals(1, violations.size());
+    Assert.assertFalse(userConstraintValidator.isValid(userDAO, constraintValidatorContext()));
+   /* Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
+    Assert.assertEquals(1, violations.size());*/
   }
 
   @Test
@@ -81,7 +86,17 @@ public class UserConstraintValidatorTest {
 
     when(userRepository.findById(userDAO.getEmail())).thenReturn(optionalUser);
 
-    Assert.assertFalse(userConstraintValidator.isValid(userDAO, new ConstraintValidatorContext() {
+    Assert.assertFalse(userConstraintValidator.isValid(userDAO, constraintValidatorContext()));
+
+    /*This validator didn't work!!!*/
+ /*   Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
+    Assert.assertEquals(1, violations.size());*/
+  }
+
+
+  public ConstraintValidatorContext constraintValidatorContext() {
+
+    return new ConstraintValidatorContext() {
       @Override
       public void disableDefaultConstraintViolation() {
 
@@ -106,10 +121,6 @@ public class UserConstraintValidatorTest {
       public <T> T unwrap(Class<T> type) {
         return null;
       }
-    }));
-
-//    Set<ConstraintViolation<UserDAO>> violations = validator.validate(userDAO);
-//    Assert.assertEquals(1, violations.size());
+    };
   }
-
 }

@@ -61,13 +61,10 @@ public class UserConstraintValidator implements ConstraintValidator<ValidUser, U
   private boolean validateDoesntExistYet(UserDAO userDAO, ConstraintValidatorContext context) {
     boolean valid = true;
     String id = userDAO.getEmail();
-    System.out.println("before find by");
     Optional<User> optionalUserDAO = userRepository.findById(id);
-    System.out.println("after find by");
     if(optionalUserDAO.isPresent()) {
       valid = false;
       context.buildConstraintViolationWithTemplate("Already exists");
-      System.out.println("is present");
     }
     return valid;
   }
